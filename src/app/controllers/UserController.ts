@@ -5,6 +5,10 @@ import User from "../models/User";
 import usersView from "../../views/usersView";
 
 class UserController {
+  async index(req: Request, res: Response) {
+    return res.json({ user: req.userToken });
+  }
+
   async store(req: Request, res: Response, next: NextFunction) {
     const userRepository = dbConnection.getRepository(User);
     const { name, email, password } = req.body;
