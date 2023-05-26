@@ -2,42 +2,40 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import User from "../models/User";
-import dbConnection from "../../database/db-connection";
-import usersView from "../../views/usersView";
+import userRepository from "../repositories/UserRepository";
+import userView from "../views/UserView";
 
-class AuthController {
-  async authenticate(req: Request, res: Response) {
-    const userRepository = dbConnection.getRepository(User);
-    const { email, password } = req.body;
+async function authenticate(req: Request, res: Response) {
+  const { email, password } = req.body;
 
-    const user = await userRepository.findOne({ where: { email } });
+  if (!email || !password)
+    return res.status(400).json({ message: "Missing params" });
 
-    if (!user) return res.status(401).json({ message: "Unable to login" });
+  const user = await userRepository.getUserByEmail(email);
 
-    const validPassword = await bcrypt.compare(password, user.password);
+  if (!user) return res.status(401).json({ message: "Unable to login" });
 
-    if (!email || !password)
-      return res.status(400).json({ message: "Unable to create user" });
+  const validPassword = await bcrypt.compare(password, user.password);
 
-    if (!validPassword)
-      return res.status(401).json({ message: "Unable to login" });
+  if (!validPassword)
+    return res.status(401).json({ message: "Unable to login" });
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: process.env.JWT_EXPIRES_IN as string,
-      }
-    );
+  const token = jwt.sign(
+    {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN as string,
+    }
+  );
 
-    return res.json({ user: usersView.renderUser(user), token });
-  }
+  return res.json({ user: userView.renderUser(user), token });
 }
 
-export default new AuthController();
+export default {
+  authenticate,
+};

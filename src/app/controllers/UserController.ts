@@ -1,31 +1,26 @@
 import { NextFunction, Request, Response } from "express";
-import dbConnection from "../../database/db-connection";
 
-import User from "../models/User";
-import usersView from "../../views/usersView";
+import userRepository from "../repositories/UserRepository";
+import usersView from "../views/UserView";
 
-class UserController {
-  async index(req: Request, res: Response) {
-    return res.json({ user: req.userToken });
-  }
+async function index(req: Request, res: Response) {
+  return res.json({ user: req.userToken });
+}
 
-  async store(req: Request, res: Response, next: NextFunction) {
-    const userRepository = dbConnection.getRepository(User);
+async function store(req: Request, res: Response, next: NextFunction) {
+  try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password)
       return res.status(400).json({ message: "Missing params" });
 
-    const userExists = await userRepository.findOne({ where: { email } });
+    const createdUser = await userRepository.create(req.body);
 
-    if (userExists)
-      return res.status(409).json({ message: "Email is alreay taken" });
-
-    const user = userRepository.create({ name, email, password });
-    const createdUser = await userRepository.save(user);
     console.log(createdUser);
     return res.json(usersView.renderUser(createdUser));
+  } catch (error) {
+    next(error);
   }
 }
 
-export default new UserController();
+export default { index, store };

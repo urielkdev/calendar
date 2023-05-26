@@ -1,4 +1,4 @@
-import User from "../app/models/User";
+import User from "../entities/UserEntity";
 
 export default {
   renderUser(user: User) {

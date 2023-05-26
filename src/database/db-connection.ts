@@ -2,8 +2,8 @@ import { DataSource } from "typeorm";
 import * as utils from "../utils/utils";
 
 const entitiesPath = utils.isProduction()
-  ? "dist/app/models/*.js"
-  : "src/app/models/*.ts";
+  ? "dist/app/entities/*.js"
+  : "src/app/entities/*.ts";
 
 const migrationsPath = utils.isProduction()
   ? "dist/database/migrations/*.js"

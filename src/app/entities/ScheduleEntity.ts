@@ -2,10 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import User from "./User";
+import User from "./UserEntity";
 
 @Entity("schedules")
 class Schedule {
@@ -19,6 +20,7 @@ class Schedule {
   shiftHours: number;
 
   @ManyToOne((type) => User, (user) => user.schedules)
+  @Index()
   user: User;
 
   @CreateDateColumn({
