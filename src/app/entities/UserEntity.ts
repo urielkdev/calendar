@@ -31,6 +31,11 @@ class User {
   })
   role: string;
 
+  @Column({
+    default: false,
+  })
+  deleted: boolean;
+
   @OneToMany((type) => Schedule, (schedule) => schedule.user)
   schedules: Schedule[];
 

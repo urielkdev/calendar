@@ -14,6 +14,8 @@ TODO:
 
 ## Functionalities
 
+(note that the user can only access routes that he has permission according to his role)
+
 - ### **Anyone**
 
   - [x] Anyone can Register

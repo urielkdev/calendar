@@ -3,11 +3,19 @@ import { NextFunction, Request, Response } from "express";
 import userRepository from "../repositories/UserRepository";
 import usersView from "../views/UserView";
 
+// TODO: remove this function, its just to test the auth and token
 async function index(req: Request, res: Response) {
   return res.json({ user: req.userToken });
 }
 
-async function store(req: Request, res: Response, next: NextFunction) {
+async function getUsers(req: Request, res: Response, next: NextFunction) {
+  const users = await userRepository.getUsers();
+
+  console.log(users);
+  return res.json(usersView.renderUsers(users));
+}
+
+async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { name, email, password } = req.body;
 
@@ -23,4 +31,4 @@ async function store(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export default { index, store };
+export default { index, createUser, getUsers };

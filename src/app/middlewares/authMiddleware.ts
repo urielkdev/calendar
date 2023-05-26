@@ -1,34 +1,53 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-interface TokenPayload {
+type TokenPayload = {
   id: number;
   name: string;
   email: string;
   role: string;
   iat: number;
   exp: number;
+};
+
+function auth(headers: any, role: string) {
+  const { authorization } = headers;
+
+  if (!authorization) throw new Error("Unauthorized");
+  const token = authorization.replace("Bearer", "").trim();
+  const data = jwt.verify(
+    token,
+    process.env.JWT_SECRET as string
+  ) as TokenPayload;
+
+  if (data.role !== role) throw new Error("Unauthorized");
+
+  return data;
 }
 
-export default function authMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const { authorization } = req.headers;
-
-  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
-
-  const token = authorization.replace("Bearer", "").trim();
-
+function adminAuthMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET as string);
-    const { id, name, email, role } = data as TokenPayload;
+    const data = auth(req.headers, "admin");
 
-    req.userToken = { id, name, email, role };
-
+    req.userToken = data;
     next();
   } catch {
     return res.status(401).json({ message: "Unauthorized" });
   }
 }
+
+function staffAuthMiddleware(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = auth(req.headers, "staff");
+
+    req.userToken = data;
+    next();
+  } catch {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
+export default {
+  adminAuthMiddleware,
+  staffAuthMiddleware,
+};

@@ -20,7 +20,14 @@ async function getUserByEmail(email: string) {
   return await userRepository.findOne({ where: { email } });
 }
 
+async function getUsers() {
+  const userRepository = dbConnection.getRepository(User);
+
+  return await userRepository.find();
+}
+
 export default {
   create,
   getUserByEmail,
+  getUsers,
 };
