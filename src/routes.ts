@@ -18,4 +18,10 @@ router.get(
   UserController.getUsers
 );
 
+router.put(
+  "/admin/users/:id",
+  authMiddleware.adminAuthMiddleware,
+  UserController.updateUser
+);
+
 export default router;
