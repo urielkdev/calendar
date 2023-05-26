@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import bcrypt from "bcryptjs";
+import Schedule from "./Schedule";
 
 // TODO: fix the spacing for tabs
 
@@ -28,6 +30,9 @@ class User {
     default: "staff",
   })
   role: string;
+
+  @OneToMany((type) => Schedule, (schedule) => schedule.user)
+  schedules: Schedule[];
 
   @CreateDateColumn({
     type: "timestamp",
