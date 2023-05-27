@@ -4,12 +4,46 @@ import dbConnection from "../../database/db-connection";
 import User from "../entities/UserEntity";
 import UserView from "../views/UserView";
 
+// TODO: create pagination
 async function getUsers(req: Request, res: Response, next: NextFunction) {
   const userRepository = dbConnection.getRepository(User);
 
   const users = await userRepository.find();
 
   return res.json(UserView.renderUsers(users));
+}
+
+async function getUsersWithAccumulatedShiftLength(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  // TODO: validate if endDate > startDate
+  const { startDate, endDate } = req.query;
+
+  const userRepository = dbConnection.getRepository(User);
+
+  let query = userRepository
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.schedules", "schedule")
+    .select([
+      "user.id as 'id'",
+      "user.name as name",
+      "user.email as email",
+      "user.role as role",
+      "SUM(schedule.shiftHours) as totalHours",
+    ])
+    .where("schedule.id is not null")
+    .groupBy("user.id");
+
+  if (startDate)
+    query = query.andWhere("schedule.date >= :startDate", { startDate });
+
+  if (endDate) query = query.andWhere("schedule.date <= :endDate", { endDate });
+
+  const users = await query.getRawMany();
+
+  return res.json(users);
 }
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -73,4 +107,10 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json(UserView.renderUser(userDeleted));
 }
 
-export default { getUsers, createUser, updateUser, deleteUser };
+export default {
+  getUsers,
+  getUsersWithAccumulatedShiftLength,
+  createUser,
+  updateUser,
+  deleteUser,
+};

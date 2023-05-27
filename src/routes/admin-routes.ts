@@ -7,6 +7,11 @@ const adminRouter = Router();
 
 adminRouter.get("/users", UserController.getUsers);
 
+adminRouter.get(
+  "/users/report",
+  UserController.getUsersWithAccumulatedShiftLength
+);
+
 adminRouter.put("/users/:id", UserController.updateUser);
 
 adminRouter.delete("/users/:id", UserController.deleteUser);
