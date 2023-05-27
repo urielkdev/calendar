@@ -25,7 +25,11 @@ function auth(headers: any, role: string) {
   return data;
 }
 
-function adminAuthMiddleware(req: Request, res: Response, next: NextFunction) {
+export function adminAuthMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const data = auth(req.headers, "admin");
 
@@ -36,7 +40,11 @@ function adminAuthMiddleware(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-function staffAuthMiddleware(req: Request, res: Response, next: NextFunction) {
+export function staffAuthMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const data = auth(req.headers, "staff");
 
@@ -46,8 +54,3 @@ function staffAuthMiddleware(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 }
-
-export default {
-  adminAuthMiddleware,
-  staffAuthMiddleware,
-};

@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import dbConnection from "./database/db-connection";
-import routes from "./routes";
+import routes from "./routes/routes";
 
 dbConnection
   .initialize()
