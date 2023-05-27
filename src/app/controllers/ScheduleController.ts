@@ -6,6 +6,12 @@ import Schedule from "../entities/ScheduleEntity";
 import ScheduleView from "../views/ScheduleView";
 import User from "../entities/UserEntity";
 
+async function getMySchedule(req: Request, res: Response, next: NextFunction) {
+  req.params.userId = `${req.userToken.id}`;
+
+  return await getUserSchedules(req, res, next);
+}
+
 async function getUserSchedules(
   req: Request,
   res: Response,
@@ -93,6 +99,7 @@ async function deleteSchedule(req: Request, res: Response, next: NextFunction) {
 }
 
 export default {
+  getMySchedule,
   getUserSchedules,
   createSchedule,
   updateSchedule,

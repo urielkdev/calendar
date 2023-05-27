@@ -4,11 +4,6 @@ import dbConnection from "../../database/db-connection";
 import User from "../entities/UserEntity";
 import UserView from "../views/UserView";
 
-// TODO: remove this function, its just to test the auth and token
-async function index(req: Request, res: Response) {
-  return res.json({ user: req.userToken });
-}
-
 async function getUsers(req: Request, res: Response, next: NextFunction) {
   const userRepository = dbConnection.getRepository(User);
 
@@ -78,4 +73,4 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json(UserView.renderUser(userDeleted));
 }
 
-export default { index, getUsers, createUser, updateUser, deleteUser };
+export default { getUsers, createUser, updateUser, deleteUser };

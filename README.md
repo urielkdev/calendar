@@ -23,8 +23,8 @@ TODO:
 
 - ### **Staff**
 
-  - [] Can view his/her schedule for any period of time (up to 1 year)
-  - [] Can see his/her coworker schedules
+  - [x] Can view his/her schedule for any period of time (up to 1 year)
+  - [x] Can see his/her coworker schedules
 
 - ### **Admin**
   - [x] Can edit/delete all users
