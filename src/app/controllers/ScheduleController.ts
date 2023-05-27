@@ -20,17 +20,18 @@ async function getUserSchedules(
   next: NextFunction
 ) {
   const userId = parseInt(req.params.userId);
-  // TODO: validate if endDate > startDate
   // TODO: params validator instead this \/
-
   const startDate = utils.dateToMySqlFormat(req.query.startDate as string);
   const endDate = utils.dateToMySqlFormat(req.query.endDate as string);
+
+  if (endDate! < startDate!)
+    throw new BadRequestError("startDate must be less or equal endDate");
 
   const user = await userService.getRepository().findOneBy({ id: userId });
 
   if (!user) throw new NotFoundError("User not found");
 
-  const schedules = await scheduleService.getScheduleByUserId(userId, {
+  const schedules = await scheduleService.getSchedulesByUserId(userId, {
     startDate,
     endDate,
   });

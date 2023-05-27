@@ -4,11 +4,14 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
 
-import dbConnection from "./database/dbConnection";
+import { dbConnection, dbOptions } from "./database/dbConnection";
+import { createDatabase, runSeeders } from "typeorm-extension";
 import server from "./server";
 import swaggerDocs from "../swagger";
 
 const start = async () => {
+  await createDatabase({ options: dbOptions });
+
   await dbConnection
     .initialize()
     .then(() => {
@@ -17,6 +20,7 @@ const start = async () => {
     .catch((err) => {
       console.error("Error during Data Source initialization:", err);
     });
+  runSeeders(dbConnection);
 
   const port = process.env.SERVER_PORT || 3000;
   const httpServer = server.listen(port, () => {

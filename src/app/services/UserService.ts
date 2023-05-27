@@ -2,7 +2,8 @@ import User from "../entities/UserEntity";
 
 import { UnprocessableEntityError } from "../../utils/Errors";
 
-import dbConnection from "../../database/dbConnection";
+import { dbConnection } from "../../database/dbConnection";
+import scheduleService from "./scheduleService";
 
 function getRepository() {
   return dbConnection.getRepository(User);
@@ -51,11 +52,12 @@ async function createUser(user: User): Promise<User> {
   return userCreated;
 }
 
-async function updateUser(user: User): Promise<User> {
+async function updateUser(user: User, changes: Object): Promise<User> {
   const userRepository = dbConnection.getRepository(User);
 
+  const userRecreated = userRepository.create({ ...user, ...changes });
   const userUpdated = await userRepository
-    .save(user)
+    .save(userRecreated)
     .catch((error) => console.error(error));
 
   if (!userUpdated) throw new UnprocessableEntityError("Error updating user");
@@ -66,11 +68,22 @@ async function updateUser(user: User): Promise<User> {
 async function softDeleteUser(user: User): Promise<User> {
   const userRepository = dbConnection.getRepository(User);
 
+  const schedules = await scheduleService.getSchedulesByUserId(user.id);
+  const schedulesDeleted = await scheduleService
+    .getRepository()
+    .softRemove(schedules)
+    .catch((error) => console.error(error));
+
+  if (!schedulesDeleted)
+    throw new UnprocessableEntityError(
+      "Error deleting schedules in delete user"
+    );
+
   const userDeleted = await userRepository
     .softRemove(user)
     .catch((error) => console.error(error));
 
-  if (!userDeleted) throw new UnprocessableEntityError("Error updating user");
+  if (!userDeleted) throw new UnprocessableEntityError("Error deleting user");
 
   return userDeleted;
 }

@@ -49,7 +49,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 
   const userExists = await userService
     .getRepository()
-    .findOne({ where: { email: userToCreate.email } });
+    .findOneBy({ email: userToCreate.email });
 
   if (userExists) throw new ConflictError("Email is alreay taken");
 
@@ -66,9 +66,9 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   if (!user) throw new NotFoundError("User not found");
 
   // TODO: create a parms validator for body, so it can modify just some data
-  const userToUpdate = { ...user, ...req.body } as User;
+  // const userToUpdate = { ...user, ...req.body } as User;
 
-  const userSaved = await userService.updateUser(userToUpdate);
+  const userSaved = await userService.updateUser(user, req.body);
 
   return res.status(200).json(userView.renderUser(userSaved));
 }

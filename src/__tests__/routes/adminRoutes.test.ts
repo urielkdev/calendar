@@ -1,8 +1,8 @@
-import scheduleService from "../../app/services/scheduleService";
-import userService from "../../app/services/userService";
-import dbConnection from "../../database/dbConnection";
 import factory from "../factory";
+import { dbConnection } from "../../database/dbConnection";
+import scheduleService from "../../app/services/scheduleService";
 import testAgent from "../testAgent";
+import userService from "../../app/services/userService";
 import utils from "../../utils/utils";
 
 const milisecondsInDay = 24 * 60 * 60 * 1000;
@@ -33,7 +33,7 @@ describe("GET /admin/users", () => {
   });
 });
 
-describe("GET /admin/users/report", () => {
+describe("GET /admin/users/reports", () => {
   it("should get all users report and sum their shiftHours", async () => {
     const user = await factory.createUser();
     const schedule1 = await factory.createSchedule({ user });
@@ -41,7 +41,7 @@ describe("GET /admin/users/report", () => {
     const schedules = [schedule1, schedule2];
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(200);
@@ -65,7 +65,7 @@ describe("GET /admin/users/report", () => {
     const schedule2 = await factory.createSchedule({ user, date });
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`)
       .query({ startDate: schedule2.date });
 
@@ -83,7 +83,7 @@ describe("GET /admin/users/report", () => {
     await factory.createSchedule({ user, date });
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`)
       .query({ endDate: schedule1.date });
 
@@ -103,7 +103,7 @@ describe("GET /admin/users/report", () => {
     await factory.createSchedule({ user, date: date3 });
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`)
       .query({ startDate: schedule2.date, endDate: schedule2.date });
 
@@ -119,7 +119,7 @@ describe("GET /admin/users/report", () => {
     const user = await factory.createUser();
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(200);
@@ -136,7 +136,7 @@ describe("GET /admin/users/report", () => {
     const date = new Date(schedule.date.getTime() + milisecondsInDay);
 
     const res = await testAgent
-      .get("/admin/users/report")
+      .get("/admin/users/reports")
       .set("Authorization", `Bearer ${token}`)
       .query({ startDate: date });
 

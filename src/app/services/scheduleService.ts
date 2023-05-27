@@ -3,15 +3,15 @@ import Schedule from "../entities/ScheduleEntity";
 
 import { UnprocessableEntityError } from "../../utils/Errors";
 
-import dbConnection from "../../database/dbConnection";
+import { dbConnection } from "../../database/dbConnection";
 
 function getRepository() {
   return dbConnection.getRepository(Schedule);
 }
 
-async function getScheduleByUserId(
+async function getSchedulesByUserId(
   userId: number,
-  { startDate, endDate }: { startDate?: string; endDate?: string }
+  { startDate, endDate }: { startDate?: string; endDate?: string } = {}
 ) {
   const scheduleRepository = dbConnection.getRepository(Schedule);
 
@@ -69,7 +69,7 @@ async function softDeleteSchedule(schedule: Schedule) {
 
 export default {
   getRepository,
-  getScheduleByUserId,
+  getSchedulesByUserId,
   createSchedule,
   updateSchedule,
   softDeleteSchedule,

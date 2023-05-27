@@ -107,9 +107,15 @@ adminRouter.get(
  *                 type: string
  *               role:
  *                 type: string
+ *                 enum:
+ *                   - 'staff'
+ *                   - 'admin'
+ *               password:
+ *                 type: string
  *             example:
  *               name: Ronald
  *               role: staff
+ *               password: newPass
  *     responses:
  *       '200':
  *         description: Successful update of user
@@ -145,6 +151,8 @@ adminRouter.put("/users/:id", userController.updateUser);
  *         description: Unauthorized
  *       '404':
  *         description: User not found
+ *       '422':
+ *         description: Error deleting schedules of delete user | Error deleting user
  */
 adminRouter.delete("/users/:id", userController.deleteUser);
 
@@ -301,6 +309,8 @@ adminRouter.put("/schedules/:id", scheduleController.updateSchedule);
  *         description: Unauthorized
  *       '404':
  *         description: Schedule not found
+ *       '422':
+ *         description: Error deleting schedule
  */
 adminRouter.delete("/schedules/:id", scheduleController.deleteSchedule);
 

@@ -27,7 +27,7 @@ describe("adminAuthMiddleware/3", () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it.only("should throw an UnauthorizedError for a token of wrong role", () => {
+  it("should throw an UnauthorizedError for a token of wrong role", () => {
     const req = {
       headers: { authorization: `Bearer ${staffToken}` },
     } as Request;
@@ -39,7 +39,7 @@ describe("adminAuthMiddleware/3", () => {
     );
   });
 
-  it.only("should throw an UnauthorizedError for a wrong token", () => {
+  it("should throw an UnauthorizedError for a wrong token", () => {
     const req = { headers: {} } as Request;
     const res = {} as Response;
     const next = jest.fn();
@@ -51,7 +51,7 @@ describe("adminAuthMiddleware/3", () => {
 });
 
 describe("staffAuthMiddleware/3", () => {
-  it.only("should authorize a valid token with staff role", () => {
+  it("should authorize a valid token with staff role", () => {
     const req = {
       headers: { authorization: `Bearer ${staffToken}` },
     } as Request;
@@ -63,7 +63,7 @@ describe("staffAuthMiddleware/3", () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it.only("should throw an UnauthorizedError for a token of wrong role", () => {
+  it("should throw an UnauthorizedError for a token of wrong role", () => {
     const req = {
       headers: { authorization: `Bearer ${adminToken}` },
     } as Request;
@@ -75,7 +75,7 @@ describe("staffAuthMiddleware/3", () => {
     );
   });
 
-  it.only("should throw an UnauthorizedError for a wrong token", () => {
+  it("should throw an UnauthorizedError for a wrong token", () => {
     const req = { headers: {} } as Request;
     const res = {} as Response;
     const next = jest.fn();
