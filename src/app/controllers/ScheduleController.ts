@@ -53,7 +53,7 @@ async function createSchedule(req: Request, res: Response, next: NextFunction) {
 
   const schedule = await scheduleService.createSchedule(user, date, shiftHours);
 
-  return res.json(scheduleView.renderSchedule(schedule));
+  return res.status(201).json(scheduleView.renderSchedule(schedule));
 }
 
 async function updateSchedule(req: Request, res: Response, next: NextFunction) {

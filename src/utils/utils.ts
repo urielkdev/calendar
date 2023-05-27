@@ -1,4 +1,6 @@
+const isTest = () => ["tst", "test"].includes(process.env.NODE_ENV || "");
+
 const isProduction = () =>
   ["prod", "production"].includes(process.env.NODE_ENV || "");
 
-export default { isProduction };
+export default { isTest, isProduction };

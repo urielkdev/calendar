@@ -16,7 +16,28 @@ function renderUsers(users: User[]) {
   };
 }
 
+function renderUserWithAccumulatedShiftLength(
+  user: User & { totalHours: number }
+) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    totalHours: user.totalHours,
+  };
+}
+
+function renderUsersWithAccumulatedShiftLength(
+  users: (User & { totalHours: number })[]
+) {
+  return {
+    users: users.map(renderUserWithAccumulatedShiftLength),
+  };
+}
+
 export default {
   renderUser,
   renderUsers,
+  renderUsersWithAccumulatedShiftLength,
 };

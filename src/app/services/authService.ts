@@ -9,6 +9,10 @@ async function login(user: User, passwordToCheck: string) {
 
   if (!validPassword) throw new UnauthorizedError("Unable to login");
 
+  return generateJwt(user);
+}
+
+function generateJwt(user: User) {
   return jwt.sign(
     {
       id: user.id,
@@ -25,4 +29,5 @@ async function login(user: User, passwordToCheck: string) {
 
 export default {
   login,
+  generateJwt,
 };

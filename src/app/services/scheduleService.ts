@@ -30,9 +30,6 @@ async function getScheduleByUserId(
 async function createSchedule(user: User, date: string, shiftHours: number) {
   const scheduleRepository = dbConnection.getRepository(Schedule);
 
-  user.id = 99;
-  console.log(user);
-
   const schedule = scheduleRepository.create({ date, shiftHours, user });
   const scheduleCreated = await scheduleRepository
     .save(schedule)

@@ -33,7 +33,7 @@ async function getUsersWithAccumulatedShiftLength(
     endDate,
   });
 
-  return res.json(users);
+  return res.json(userView.renderUsersWithAccumulatedShiftLength(users));
 }
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -53,7 +53,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 
   const user = await userService.createUser(userToCreate);
 
-  return res.json(userView.renderUser(user));
+  return res.status(201).json(userView.renderUser(user));
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction) {

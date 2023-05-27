@@ -1,4 +1,6 @@
 import { DataSource } from "typeorm";
+import dotenv from "dotenv";
+dotenv.config();
 
 import utils from "../utils/utils";
 
@@ -17,11 +19,14 @@ export default new DataSource({
   username: "root",
   // TODO: change this to a secret manager or .env
   password: "password",
-  database: "calendar",
+  database: `calendar${
+    !utils.isProduction() ? "_" + process.env.NODE_ENV : ""
+  }`,
   synchronize: false,
-  logging: false,
+  logging: true,
   entities: [entitiesPath],
   migrations: [migrationsPath],
   subscribers: [],
+  // dropSchema: true,
   migrationsRun: true,
 });
