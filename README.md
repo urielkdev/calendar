@@ -3,6 +3,7 @@
 - [Technologies](#technologies)
 - [How to use](#how-to-use)
 - [Postman file](#postman-file)
+- [OpenAPI Docs](#openapi-docs)
 
 <a id="about"></a>
 
@@ -113,3 +114,9 @@ TZ=UTC  (timezone, keep it as "UTC" fow now so the server doesn't break database
 ## Postman File
 
 - [Collection v2.1 in root directory](https://github.com/urielkdev/calendar/blob/main/Calendar.postman_collection.json) `Calendar.postman_collection.json`
+
+<a id="openapi-docs"></a>
+
+## OpenAPI Docs
+
+- localhost:${SERVER_PORT}/docs

@@ -6,6 +6,7 @@ dotenv.config();
 
 import dbConnection from "./database/dbConnection";
 import server from "./server";
+import swaggerDocs from "../swagger";
 
 const start = async () => {
   await dbConnection
@@ -18,9 +19,11 @@ const start = async () => {
     });
 
   const port = process.env.SERVER_PORT || 3000;
-  const httpServer = server.listen(port, () =>
-    console.log(`Server started on port ${port}`)
-  );
+  const httpServer = server.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+
+    swaggerDocs(server);
+  });
 
   process.on("SIGINT", () => stopAll(httpServer));
   process.on("SIGTERM", () => stopAll(httpServer));

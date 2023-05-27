@@ -14,6 +14,25 @@ import Schedule from "./ScheduleEntity";
 
 // TODO: fix the spacing for tabs
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *         role:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ */
 @Entity("users")
 class User {
   @PrimaryGeneratedColumn("increment")

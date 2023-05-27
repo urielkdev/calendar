@@ -9,7 +9,25 @@ import {
 } from "typeorm";
 
 import User from "./UserEntity";
-
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Schedule:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         date:
+ *           type: string
+ *           format: date-time
+ *         shiftHours:
+ *           type: number
+ *           format: float
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ */
 @Entity("schedules")
 class Schedule {
   @PrimaryGeneratedColumn("increment")

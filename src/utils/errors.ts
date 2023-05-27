@@ -30,7 +30,7 @@ export class NotFoundError extends ApiError {
 
 export class ConflictError extends ApiError {
   constructor(message: string = "Conflict") {
-    super(message, 404);
+    super(message, 409);
   }
 }
 
