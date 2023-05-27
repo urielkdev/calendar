@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
-import usersView from "../views/UserView";
 import dbConnection from "../../database/db-connection";
 import User from "../entities/UserEntity";
+import UserView from "../views/UserView";
 
 // TODO: remove this function, its just to test the auth and token
 async function index(req: Request, res: Response) {
@@ -14,7 +14,7 @@ async function getUsers(req: Request, res: Response, next: NextFunction) {
 
   const users = await userRepository.find();
 
-  return res.json(usersView.renderUsers(users));
+  return res.json(UserView.renderUsers(users));
 }
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -35,7 +35,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
   if (!userCreated)
     return res.status(422).json({ message: "Error creating user" });
 
-  return res.json(usersView.renderUser(userCreated));
+  return res.json(UserView.renderUser(userCreated));
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction) {
@@ -43,6 +43,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   const id = parseInt(req.params.id);
 
   const user = await userRepository.findOneBy({ id });
+
   if (!user) return res.status(404).json({ message: "User not found" });
 
   // TODO: create a parms validator for body, so it can modify just some data
@@ -55,7 +56,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   if (!userSaved)
     return res.status(422).json({ message: "Error updating user" });
 
-  return res.status(200).json(usersView.renderUser(userSaved));
+  return res.status(200).json(UserView.renderUser(userSaved));
 }
 
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
@@ -63,6 +64,7 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   const id = parseInt(req.params.id);
 
   const user = await userRepository.findOneBy({ id });
+
   if (!user) return res.status(404).json({ message: "User not found" });
 
   // TODO: check if id soft delete the schedules cascade
@@ -73,9 +75,7 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   if (!userDeleted)
     return res.status(422).json({ message: "Error updating user" });
 
-  return res.status(200).json(usersView.renderUser(userDeleted));
+  return res.status(200).json(UserView.renderUser(userDeleted));
 }
-
-async function a(req: Request, res: Response, next: NextFunction) {}
 
 export default { index, getUsers, createUser, updateUser, deleteUser };
