@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   CreateDateColumn,
   Column,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -31,12 +32,9 @@ class User {
   })
   role: string;
 
-  @Column({
-    default: false,
+  @OneToMany((type) => Schedule, (schedule) => schedule.user, {
+    cascade: true,
   })
-  deleted: boolean;
-
-  @OneToMany((type) => Schedule, (schedule) => schedule.user)
   schedules: Schedule[];
 
   @CreateDateColumn({
@@ -46,6 +44,9 @@ class User {
   })
   createdAt: Date;
   // TODO: create a updatedAt and test when update a register
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @BeforeInsert()
   @BeforeUpdate()

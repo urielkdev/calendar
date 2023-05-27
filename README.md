@@ -27,7 +27,7 @@ TODO:
   - [] Can see his/her coworker schedules
 
 - ### **Admin**
-  - [] Can edit/delete all users
+  - [x] Can edit/delete all users
   - [] Can create/edit/delete schedule for users
   - [] Can order users list by accumulated work hours per arbitrary period (up to 1 year)
 

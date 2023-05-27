@@ -42,6 +42,12 @@ export class CreateUsersTable1685066544523 implements MigrationInterface {
             type: "timestamp",
             default: "now()",
           },
+          {
+            name: "deletedAt",
+            type: "timestamp",
+            isNullable: true,
+            default: "null",
+          },
         ],
       })
     );

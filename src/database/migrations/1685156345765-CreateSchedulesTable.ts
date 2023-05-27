@@ -29,7 +29,7 @@ export class CreateSchedulesTable1685156345765 implements MigrationInterface {
             unsigned: true,
           },
           {
-            name: "user",
+            name: "userId",
             type: "integer",
             unsigned: true,
           },
@@ -38,6 +38,12 @@ export class CreateSchedulesTable1685156345765 implements MigrationInterface {
             type: "timestamp",
             default: "now()",
           },
+          {
+            name: "deletedAt",
+            type: "timestamp",
+            isNullable: true,
+            default: "null",
+          },
         ],
       })
     );
@@ -45,7 +51,7 @@ export class CreateSchedulesTable1685156345765 implements MigrationInterface {
     await queryRunner.createForeignKey(
       "schedules",
       new TableForeignKey({
-        columnNames: ["user"],
+        columnNames: ["userId"],
         referencedColumnNames: ["id"],
         referencedTableName: "users",
       })

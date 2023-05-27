@@ -46,8 +46,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   if (!user) return res.status(404).json({ message: "User not found" });
 
   // TODO: create a parms validator for body, so it can modify just some data
-  const a = req.body as User;
-  const userToUpdate = { ...user, ...a };
+  const userToUpdate = { ...user, ...(req.body as User) };
 
   const userSaved = await userRepository
     .save(userToUpdate)
@@ -59,4 +58,24 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json(usersView.renderUser(userSaved));
 }
 
-export default { createUser, index, getUsers, updateUser };
+async function deleteUser(req: Request, res: Response, next: NextFunction) {
+  const userRepository = dbConnection.getRepository(User);
+  const id = parseInt(req.params.id);
+
+  const user = await userRepository.findOneBy({ id });
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  // TODO: check if id soft delete the schedules cascade
+  const userDeleted = await userRepository
+    .softRemove(user)
+    .catch((error) => console.log(error));
+
+  if (!userDeleted)
+    return res.status(422).json({ message: "Error updating user" });
+
+  return res.status(200).json(usersView.renderUser(userDeleted));
+}
+
+async function a(req: Request, res: Response, next: NextFunction) {}
+
+export default { index, getUsers, createUser, updateUser, deleteUser };

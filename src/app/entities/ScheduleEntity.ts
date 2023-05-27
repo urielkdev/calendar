@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
@@ -29,5 +30,8 @@ class Schedule {
     update: false,
   })
   createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 export default Schedule;

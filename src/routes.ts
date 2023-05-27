@@ -24,4 +24,10 @@ router.put(
   UserController.updateUser
 );
 
+router.delete(
+  "/admin/users/:id",
+  authMiddleware.adminAuthMiddleware,
+  UserController.deleteUser
+);
+
 export default router;
