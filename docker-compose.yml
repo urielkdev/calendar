@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.8"
 
 services:
   db:
@@ -7,5 +7,28 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: calendar
     ports:
       - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=password"]
+      timeout: 30s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: prod
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dbdata:

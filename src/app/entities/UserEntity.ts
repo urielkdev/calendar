@@ -52,7 +52,10 @@ class User {
   @BeforeInsert()
   @BeforeUpdate()
   hashPassword() {
-    this.password = bcrypt.hashSync(this.password, process.env.PASSWORD_SALT);
+    this.password = bcrypt.hashSync(
+      this.password,
+      parseInt(process.env.PASSWORD_SALT || "10")
+    );
   }
 }
 export default User;

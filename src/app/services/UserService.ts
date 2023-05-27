@@ -44,7 +44,9 @@ async function createUser(user: User): Promise<User> {
   const userToCreate = userRepository.create(user);
   const userCreated = await userRepository
     .save(userToCreate)
-    .catch((_err) => null);
+    .catch((err) => null);
+
+  console.log(userCreated);
 
   if (!userCreated) throw new UnprocessableEntityError("Error creating user");
 

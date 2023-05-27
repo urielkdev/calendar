@@ -5,20 +5,20 @@ dotenv.config();
 import utils from "../utils/utils";
 
 const entitiesPath = utils.isProduction()
-  ? "dist/app/entities/*.js"
+  ? "dist/src/app/entities/*.js"
   : "src/app/entities/*.ts";
 
 const migrationsPath = utils.isProduction()
-  ? "dist/database/migrations/*.js"
+  ? "dist/src/database/migrations/*.js"
   : "src/database/migrations/*.ts";
 
 export default new DataSource({
   type: "mysql",
-  host: "localhost",
-  port: 3306,
-  username: "root",
+  host: process.env.DB_HOST,
+  port: +process.env.DB_PORT!,
+  username: process.env.DB_USERNAME,
   // TODO: change this to a secret manager or .env
-  password: "password",
+  password: process.env.DB_PASSWORD,
   database: `calendar${
     !utils.isProduction() ? "_" + process.env.NODE_ENV : ""
   }`,

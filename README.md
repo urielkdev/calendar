@@ -55,11 +55,15 @@ n. Add variables on `.env` file:
 File: `.env`
 
 ```text
-NODE_ENV = environment that you are running the application (prod for production environment)
-PORT = add a port or run on 3000 by default
-PASSWORD_SALT = string salt to be used encrypt the password, generate with this: bcrypt.genSaltSync()
-JWT_SECRET = strong salt to be used by JWT
-JWT_EXPIRES_IN = set how long the token should be valid
+NODE_ENV=environment that you are running the application (prod for production environment)
+SERVER_PORT=add a port or run on 3000 by default
+DB_HOST=database host
+DB_PORT=database port
+DB_USERNAME=database username
+DB_PASSWORD=database password
+PASSWORD_SALT=number used to encrypt the password with bcrypt
+JWT_SECRET=strong secret to be used by JWT
+JWT_EXPIRES_IN=set how long the token should be valid
 ```
 
 n. Configure `src/database/db-connection.json` to connect the database. Default values as below:
@@ -80,10 +84,12 @@ development:
 ```
 
 production:
-TODO:
+
+- Create an .env file as shown above.
+- Install docker and docker-compose.
 
 ```sh
-  # Install dependencies.
+  # Run docker-compose up.
   $ docker-compose up
 ```
 
