@@ -33,7 +33,7 @@ async function createSchedule(user: User, date: string, shiftHours: number) {
   const schedule = scheduleRepository.create({ date, shiftHours, user });
   const scheduleCreated = await scheduleRepository
     .save(schedule)
-    .catch((_err) => null);
+    .catch((error) => console.error(error));
 
   if (!scheduleCreated)
     throw new UnprocessableEntityError("Error creating schedule");
@@ -46,7 +46,7 @@ async function updateSchedule(schedule: Schedule) {
 
   const scheduleSaved = await scheduleRepository
     .save(schedule)
-    .catch((_err) => null);
+    .catch((error) => console.error(error));
 
   if (!scheduleSaved)
     throw new UnprocessableEntityError("Error updating schedule");
@@ -59,7 +59,7 @@ async function softDeleteSchedule(schedule: Schedule) {
 
   const scheduleDeleted = await scheduleRepository
     .softRemove(schedule)
-    .catch((_err) => null);
+    .catch((error) => console.error(error));
 
   if (!scheduleDeleted)
     throw new UnprocessableEntityError("Error updating schedule");

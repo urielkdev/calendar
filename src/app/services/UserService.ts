@@ -44,7 +44,7 @@ async function createUser(user: User): Promise<User> {
   const userToCreate = userRepository.create(user);
   const userCreated = await userRepository
     .save(userToCreate)
-    .catch((_err) => null);
+    .catch((error) => console.error(error));
 
   if (!userCreated) throw new UnprocessableEntityError("Error creating user");
 
@@ -54,7 +54,9 @@ async function createUser(user: User): Promise<User> {
 async function updateUser(user: User): Promise<User> {
   const userRepository = dbConnection.getRepository(User);
 
-  const userUpdated = await userRepository.save(user).catch((_err) => null);
+  const userUpdated = await userRepository
+    .save(user)
+    .catch((error) => console.error(error));
 
   if (!userUpdated) throw new UnprocessableEntityError("Error updating user");
 
@@ -66,7 +68,7 @@ async function softDeleteUser(user: User): Promise<User> {
 
   const userDeleted = await userRepository
     .softRemove(user)
-    .catch((_err) => null);
+    .catch((error) => console.error(error));
 
   if (!userDeleted) throw new UnprocessableEntityError("Error updating user");
 

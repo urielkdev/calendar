@@ -44,13 +44,12 @@ async function createSchedule(req: Request, res: Response, next: NextFunction) {
 
   if (!userId || !date || !shiftHours)
     throw new BadRequestError("Missing params");
-
   const user = await userService.getRepository().findOneBy({ id: userId });
 
   if (!user) throw new NotFoundError("User not found");
+
   // TODO: ask if needs to check the conflict dates for insert
   // maybe instead shiftHours, use a endDate
-
   const schedule = await scheduleService.createSchedule(user, date, shiftHours);
 
   return res.status(201).json(scheduleView.renderSchedule(schedule));
@@ -60,6 +59,7 @@ async function updateSchedule(req: Request, res: Response, next: NextFunction) {
   const id = parseInt(req.params.id);
 
   const schedule = await scheduleService.getRepository().findOneBy({ id });
+
   if (!schedule) throw new NotFoundError("Schedule not found");
 
   // TODO: create a parms validator for body, so it can modify just some data

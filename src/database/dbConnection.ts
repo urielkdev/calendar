@@ -29,5 +29,5 @@ export default new DataSource({
   subscribers: [],
   // dropSchema: true,
   migrationsRun: true,
-  timezone: process.env.TZ,
+  timezone: "UTC",
 });

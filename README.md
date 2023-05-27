@@ -64,7 +64,7 @@ DB_PASSWORD=database password
 PASSWORD_SALT=number used to encrypt the password with bcrypt
 JWT_SECRET=strong secret to be used by JWT
 JWT_EXPIRES_IN=set how long the token should be valid
-TZ=UTC  (timezone, keep it as "UTC" so the server doesn't break database date conversions)
+TZ=UTC  (timezone, keep it as "UTC" fow now so the server doesn't break database date conversions)
 ```
 
 n. Configure `src/database/db-connection.json` to connect the database. Default values as below:

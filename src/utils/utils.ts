@@ -12,14 +12,17 @@ const roundDecimalPlaces = (num: number, decimalPlaces: number = 2) => {
 
 const dateToMySqlFormat = (date: Date | string) => {
   if (!date) return;
-
   const time = new Date(date).getTime() + 500;
   return new Date(time).toISOString().slice(0, 19).replace("T", " ");
 };
+
+const findById = (array: any[], id: number) =>
+  array.find((item: any) => item.id == id);
 
 export default {
   isTest,
   isProduction,
   roundDecimalPlaces,
   dateToMySqlFormat,
+  findById,
 };

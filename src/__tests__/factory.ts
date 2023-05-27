@@ -6,6 +6,7 @@ import User from "../app/entities/UserEntity";
 import Schedule from "../app/entities/ScheduleEntity";
 import scheduleService from "../app/services/scheduleService";
 import { DeepPartial } from "typeorm";
+import { Response } from "supertest";
 
 function buildToken(role: string, id?: number) {
   const adminUser = userService.getRepository().create({
@@ -27,7 +28,11 @@ function buildSchedule(params?: DeepPartial<Schedule>) {
 }
 
 async function createSchedule(params?: DeepPartial<Schedule>) {
-  return await scheduleService.getRepository().save(buildSchedule(params));
+  const user = (params?.user as User) || (await createUser());
+
+  return await scheduleService
+    .getRepository()
+    .save(buildSchedule({ user, ...params }));
 }
 
 function buildUser(params?: DeepPartial<User>) {
