@@ -17,7 +17,7 @@ class Schedule {
   @Column()
   date: Date;
 
-  @Column()
+  @Column({ type: "float" })
   shiftHours: number;
 
   @ManyToOne((type) => User, (user) => user.schedules)

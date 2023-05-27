@@ -18,6 +18,8 @@ async function getUserSchedules(
   next: NextFunction
 ) {
   const userId = parseInt(req.params.userId);
+  // TODO: validate if endDate > startDate
+  const { startDate, endDate } = req.query;
 
   const scheduleRepository = dbConnection.getRepository(Schedule);
   const userRepository = dbConnection.getRepository(User);
@@ -26,10 +28,16 @@ async function getUserSchedules(
 
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  const schedules = await scheduleRepository.find({
-    where: { user: { id: user.id } },
-  });
+  let query = scheduleRepository
+    .createQueryBuilder("schedule")
+    .where("schedule.userId = :userId", { userId });
 
+  if (startDate)
+    query = query.andWhere("schedule.date >= :startDate", { startDate });
+
+  if (endDate) query = query.andWhere("schedule.date <= :endDate", { endDate });
+
+  const schedules = await query.getMany();
   return res.json(ScheduleView.renderSchedules(schedules));
 }
 
