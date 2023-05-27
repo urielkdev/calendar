@@ -23,10 +23,11 @@ export default new DataSource({
     !utils.isProduction() ? "_" + process.env.NODE_ENV : ""
   }`,
   synchronize: false,
-  logging: true,
+  logging: false,
   entities: [entitiesPath],
   migrations: [migrationsPath],
   subscribers: [],
   // dropSchema: true,
   migrationsRun: true,
+  timezone: process.env.TZ,
 });

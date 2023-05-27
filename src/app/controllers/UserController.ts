@@ -9,6 +9,7 @@ import User from "../entities/UserEntity";
 
 import userView from "../views/userView";
 import userService from "../services/userService";
+import utils from "../../utils/utils";
 
 // TODO: create pagination
 async function getUsers(req: Request, res: Response, next: NextFunction) {
@@ -23,10 +24,8 @@ async function getUsersWithAccumulatedShiftLength(
   next: NextFunction
 ) {
   // TODO: validate if endDate > startDate
-  const { startDate, endDate } = req.query as {
-    startDate: string;
-    endDate: string;
-  };
+  const startDate = utils.dateToMySqlFormat(req.query.startDate as string);
+  const endDate = utils.dateToMySqlFormat(req.query.endDate as string);
 
   const users = await userService.getUsersWithAccumulatedShiftLength({
     startDate,

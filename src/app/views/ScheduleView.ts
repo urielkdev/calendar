@@ -1,11 +1,15 @@
 import Schedule from "../entities/ScheduleEntity";
 
+import utils from "../../utils/utils";
+
 function renderSchedule(schedule: Schedule) {
+  console.log(schedule.date);
+  console.log(typeof schedule.date);
   return {
     id: schedule.id,
-    date: schedule.date,
+    date: utils.dateToMySqlFormat(schedule.date),
     shiftHours: schedule.shiftHours,
-    createdAt: schedule.createdAt,
+    createdAt: utils.dateToMySqlFormat(schedule.createdAt),
   };
 }
 

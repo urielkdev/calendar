@@ -6,6 +6,7 @@ import Schedule from "../entities/ScheduleEntity";
 import scheduleService from "../services/scheduleService";
 import scheduleView from "../views/scheduleView";
 import userService from "../services/userService";
+import utils from "../../utils/utils";
 
 async function getMySchedule(req: Request, res: Response, next: NextFunction) {
   req.params.userId = `${req.userToken.id}`;
@@ -21,10 +22,9 @@ async function getUserSchedules(
   const userId = parseInt(req.params.userId);
   // TODO: validate if endDate > startDate
   // TODO: params validator instead this \/
-  const { startDate, endDate } = req.query as {
-    startDate: string;
-    endDate: string;
-  };
+
+  const startDate = utils.dateToMySqlFormat(req.query.startDate as string);
+  const endDate = utils.dateToMySqlFormat(req.query.endDate as string);
 
   const user = await userService.getRepository().findOneBy({ id: userId });
 

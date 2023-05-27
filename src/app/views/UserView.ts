@@ -1,12 +1,14 @@
 import User from "../entities/UserEntity";
 
+import utils from "../../utils/utils";
+
 function renderUser(user: User) {
   return {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
-    createdAt: user.createdAt,
+    createdAt: utils.dateToMySqlFormat(user.createdAt),
   };
 }
 
@@ -24,7 +26,7 @@ function renderUserWithAccumulatedShiftLength(
     name: user.name,
     email: user.email,
     role: user.role,
-    totalHours: user.totalHours,
+    totalHours: utils.roundDecimalPlaces(user.totalHours),
   };
 }
 

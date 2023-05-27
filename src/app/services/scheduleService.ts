@@ -11,7 +11,7 @@ function getRepository() {
 
 async function getScheduleByUserId(
   userId: number,
-  { startDate, endDate }: { startDate: string; endDate: string }
+  { startDate, endDate }: { startDate?: string; endDate?: string }
 ) {
   const scheduleRepository = dbConnection.getRepository(Schedule);
 

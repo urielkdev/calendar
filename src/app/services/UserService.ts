@@ -8,18 +8,19 @@ function getRepository() {
   return dbConnection.getRepository(User);
 }
 
+// TODO: put a order by in some queries
 async function getUsersWithAccumulatedShiftLength({
   startDate,
   endDate,
 }: {
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
 }) {
   const userRepository = dbConnection.getRepository(User);
 
   let query = userRepository
     .createQueryBuilder("user")
-    .leftJoinAndSelect("user.schedules", "schedule")
+    .innerJoinAndSelect("user.schedules", "schedule")
     .select([
       "user.id as 'id'",
       "user.name as name",
@@ -27,7 +28,6 @@ async function getUsersWithAccumulatedShiftLength({
       "user.role as role",
       "SUM(schedule.shiftHours) as totalHours",
     ])
-    .where("schedule.id is not null")
     .groupBy("user.id");
 
   if (startDate)
@@ -44,9 +44,7 @@ async function createUser(user: User): Promise<User> {
   const userToCreate = userRepository.create(user);
   const userCreated = await userRepository
     .save(userToCreate)
-    .catch((err) => null);
-
-  console.log(userCreated);
+    .catch((_err) => null);
 
   if (!userCreated) throw new UnprocessableEntityError("Error creating user");
 

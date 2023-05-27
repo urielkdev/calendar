@@ -18,9 +18,9 @@ afterAll(async () => {
   dbConnection.destroy();
 });
 
-beforeEach(clearDatabase);
-
 describe("GET /admin/users", () => {
+  beforeEach(async () => clearDatabase());
+
   test("It should get all users", async () => {
     const user = await factory.createUser();
 
@@ -37,11 +37,12 @@ describe("GET /admin/users", () => {
 });
 
 describe("GET /admin/users/report", () => {
+  beforeEach(async () => clearDatabase());
+
   it("should get all users report and sum their shiftHours", async () => {
     const user = await factory.createUser();
     const schedule1 = await factory.createSchedule({ user });
-    const date = new Date(schedule1.date.getTime() + milisecondsInDay);
-    const schedule2 = await factory.createSchedule({ user, date });
+    const schedule2 = await factory.createSchedule({ user });
     const schedules = [schedule1, schedule2];
 
     const response = await testAgent
@@ -62,28 +63,62 @@ describe("GET /admin/users/report", () => {
     expect(userFound.totalHours).toBeCloseTo(sumShiftHours);
   });
 
-  // it("should get all users report filtered by startDate and sum their shiftHours", async () => {
-  //   const user = await factory.createUser();
-  //   const schedule1 = await factory.createSchedule({ user });
-  //   const date = new Date(schedule1.date.getTime() + milisecondsInDay);
-  //   const schedule2 = await factory.createSchedule({ user, date });
-  //   const schedules = [schedule1, schedule2];
+  it("should get all users report filtered by startDate", async () => {
+    const user = await factory.createUser();
+    const schedule1 = await factory.createSchedule({ user });
+    const date = new Date(schedule1.date.getTime() + milisecondsInDay);
+    const schedule2 = await factory.createSchedule({ user, date });
 
-  //   const response = await testAgent
-  //     .get("/admin/users/report")
-  //     .set("Authorization", `Bearer ${token}`)
-  //     .query({ startDate: schedule1.date });
+    const response = await testAgent
+      .get("/admin/users/report")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ startDate: schedule2.date });
 
-  //   expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200);
 
-  //   console.log(date);
-  //   console.log(schedules);
-  //   console.log(response.body.users);
+    const userFound = response.body.users.find((u: any) => u.id == user.id);
 
-  //   const userFound = response.body.users.find((u: any) => u.id == user.id);
+    expect(userFound).toBeDefined();
+    expect(userFound.totalHours).toBeCloseTo(schedule2.shiftHours);
+  });
 
-  //   expect(userFound).toBeDefined();
+  it("should get all users report filtered by endDate", async () => {
+    const user = await factory.createUser();
+    const schedule1 = await factory.createSchedule({ user });
+    const date = new Date(schedule1.date.getTime() + milisecondsInDay);
+    await factory.createSchedule({ user, date });
 
-  //   expect(userFound.totalHours).toBeCloseTo(schedules[1].shiftHours);
-  // });
+    const response = await testAgent
+      .get("/admin/users/report")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ endDate: schedule1.date });
+
+    expect(response.statusCode).toBe(200);
+
+    const userFound = response.body.users.find((u: any) => u.id == user.id);
+
+    expect(userFound).toBeDefined();
+    expect(userFound.totalHours).toBeCloseTo(schedule1.shiftHours);
+  });
+
+  it("should get all users report filtered by startDate and endDate and sum their shiftHours", async () => {
+    const user = await factory.createUser();
+    const schedule1 = await factory.createSchedule({ user });
+    const date2 = new Date(schedule1.date.getTime() + milisecondsInDay);
+    const schedule2 = await factory.createSchedule({ user, date: date2 });
+    const date3 = new Date(schedule2.date.getTime() + milisecondsInDay);
+    await factory.createSchedule({ user, date: date3 });
+
+    const response = await testAgent
+      .get("/admin/users/report")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ startDate: schedule2.date, endDate: schedule2.date });
+
+    expect(response.statusCode).toBe(200);
+
+    const userFound = response.body.users.find((u: any) => u.id == user.id);
+
+    expect(userFound).toBeDefined();
+    expect(userFound.totalHours).toBeCloseTo(schedule2.shiftHours);
+  });
 });
