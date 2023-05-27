@@ -4,9 +4,9 @@ import {
   adminAuthMiddleware,
   staffAuthMiddleware,
 } from "../app/middlewares/authMiddleware";
-import adminRouter from "./admin-routes";
-import openRouter from "./open-routes";
-import staffRouter from "./staff-routes";
+import adminRouter from "./adminRoutes";
+import openRouter from "./openRoutes";
+import staffRouter from "./staffRoutes";
 
 const router = Router();
 

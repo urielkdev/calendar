@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
-import * as utils from "../utils/utils";
+
+import utils from "../utils/utils";
 
 const entitiesPath = utils.isProduction()
   ? "dist/app/entities/*.js"

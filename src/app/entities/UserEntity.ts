@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -8,7 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import bcrypt from "bcryptjs";
+
 import Schedule from "./ScheduleEntity";
 
 // TODO: fix the spacing for tabs

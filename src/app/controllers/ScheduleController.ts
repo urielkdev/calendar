@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-// TODO: fix create a pattern to files and names
-import dbConnection from "../../database/db-connection";
+import { BadRequestError, NotFoundError } from "../../utils/Errors";
 import Schedule from "../entities/ScheduleEntity";
-import ScheduleView from "../views/ScheduleView";
 import User from "../entities/UserEntity";
-import { BadRequestError, NotFoundError } from "../../utils/errors";
+
+import dbConnection from "../../database/dbConnection";
+import scheduleView from "../views/scheduleView";
 
 async function getMySchedule(req: Request, res: Response, next: NextFunction) {
   req.params.userId = `${req.userToken.id}`;
@@ -39,7 +39,7 @@ async function getUserSchedules(
   if (endDate) query = query.andWhere("schedule.date <= :endDate", { endDate });
 
   const schedules = await query.getMany();
-  return res.json(ScheduleView.renderSchedules(schedules));
+  return res.json(scheduleView.renderSchedules(schedules));
 }
 
 async function createSchedule(req: Request, res: Response, next: NextFunction) {
@@ -66,7 +66,7 @@ async function createSchedule(req: Request, res: Response, next: NextFunction) {
   if (!scheduleCreated)
     return res.status(422).json({ message: "Error creating schedule" });
 
-  return res.json(ScheduleView.renderSchedule(scheduleCreated));
+  return res.json(scheduleView.renderSchedule(scheduleCreated));
 }
 
 async function updateSchedule(req: Request, res: Response, next: NextFunction) {
@@ -86,7 +86,7 @@ async function updateSchedule(req: Request, res: Response, next: NextFunction) {
   if (!scheduleSaved)
     return res.status(422).json({ message: "Error updating schedule" });
 
-  return res.status(200).json(ScheduleView.renderSchedule(scheduleSaved));
+  return res.status(200).json(scheduleView.renderSchedule(scheduleSaved));
 }
 
 async function deleteSchedule(req: Request, res: Response, next: NextFunction) {
@@ -104,7 +104,7 @@ async function deleteSchedule(req: Request, res: Response, next: NextFunction) {
   if (!scheduleDeleted)
     return res.status(422).json({ message: "Error updating schedule" });
 
-  return res.status(200).json(ScheduleView.renderSchedule(scheduleDeleted));
+  return res.status(200).json(scheduleView.renderSchedule(scheduleDeleted));
 }
 
 export default {

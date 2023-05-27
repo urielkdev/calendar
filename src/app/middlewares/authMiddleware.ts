@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { UnauthorizedError } from "../../utils/errors";
+
+import { UnauthorizedError } from "../../utils/Errors";
 
 type TokenPayload = {
   id: number;

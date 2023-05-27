@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import userService from "../services/UserService";
-import userView from "../views/UserView";
-import { BadRequestError, UnauthorizedError } from "../../utils/errors";
+import { BadRequestError, UnauthorizedError } from "../../utils/Errors";
+
+import userService from "../services/userService";
+import userView from "../views/userView";
 
 async function authenticate(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -35,6 +36,4 @@ async function authenticate(req: Request, res: Response) {
   return res.json({ user: userView.renderUser(user), token });
 }
 
-export default {
-  authenticate,
-};
+export default { authenticate };

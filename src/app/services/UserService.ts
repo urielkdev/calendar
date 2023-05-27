@@ -1,6 +1,6 @@
-import dbConnection from "../../database/db-connection";
-
 import User from "../entities/UserEntity";
+
+import dbConnection from "../../database/dbConnection";
 
 async function create({ name, email, password }: User): Promise<User> {
   const userRepository = dbConnection.getRepository(User);

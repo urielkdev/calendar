@@ -5,9 +5,9 @@ import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
-import dbConnection from "./database/db-connection";
-import routes from "./routes/routes";
+import dbConnection from "./database/dbConnection";
 import errorMiddleware from "./app/middlewares/errorMiddleware";
+import routes from "./routes/routes";
 
 dbConnection
   .initialize()

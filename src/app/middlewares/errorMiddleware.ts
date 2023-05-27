@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ApiError } from "../../utils/errors";
+
+import { ApiError } from "../../utils/Errors";
 
 export default (
   error: Error & Partial<ApiError>,

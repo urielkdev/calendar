@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import dbConnection from "../../database/db-connection";
+import { BadRequestError, NotFoundError } from "../../utils/Errors";
 import User from "../entities/UserEntity";
-import UserView from "../views/UserView";
-import { BadRequestError, NotFoundError } from "../../utils/errors";
+
+import dbConnection from "../../database/dbConnection";
+import userView from "../views/userView";
 
 // TODO: create pagination
 async function getUsers(req: Request, res: Response, next: NextFunction) {
@@ -11,7 +12,7 @@ async function getUsers(req: Request, res: Response, next: NextFunction) {
 
   const users = await userRepository.find();
 
-  return res.json(UserView.renderUsers(users));
+  return res.json(userView.renderUsers(users));
 }
 
 async function getUsersWithAccumulatedShiftLength(
@@ -64,7 +65,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
   if (!userCreated)
     return res.status(422).json({ message: "Error creating user" });
 
-  return res.json(UserView.renderUser(userCreated));
+  return res.json(userView.renderUser(userCreated));
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction) {
@@ -85,7 +86,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
   if (!userSaved)
     return res.status(422).json({ message: "Error updating user" });
 
-  return res.status(200).json(UserView.renderUser(userSaved));
+  return res.status(200).json(userView.renderUser(userSaved));
 }
 
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
@@ -104,7 +105,7 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
   if (!userDeleted)
     return res.status(422).json({ message: "Error updating user" });
 
-  return res.status(200).json(UserView.renderUser(userDeleted));
+  return res.status(200).json(userView.renderUser(userDeleted));
 }
 
 export default {
