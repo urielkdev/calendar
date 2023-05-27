@@ -29,7 +29,7 @@ TODO:
 - ### **Admin**
   - [x] Can edit/delete all users
   - [x] Can create/edit/delete schedule for users
-  - [] Can order users list by accumulated work hours per arbitrary period (up to 1 year)
+  - [x] Can order users list by accumulated work hours per arbitrary period (up to 1 year)
 
 <a id="technologies"></a>
 

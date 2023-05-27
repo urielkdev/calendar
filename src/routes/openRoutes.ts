@@ -6,6 +6,6 @@ import userController from "../app/controllers/userController";
 const openRouter = Router();
 
 openRouter.post("/users", userController.createUser);
-openRouter.post("/auth", authController.authenticate);
+openRouter.post("/auth", authController.login);
 
 export default openRouter;

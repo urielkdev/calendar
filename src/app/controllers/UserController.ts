@@ -1,16 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 
-import { BadRequestError, NotFoundError } from "../../utils/Errors";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+} from "../../utils/Errors";
 import User from "../entities/UserEntity";
 
-import dbConnection from "../../database/dbConnection";
 import userView from "../views/userView";
+import userService from "../services/userService";
 
 // TODO: create pagination
 async function getUsers(req: Request, res: Response, next: NextFunction) {
-  const userRepository = dbConnection.getRepository(User);
-
-  const users = await userRepository.find();
+  const users = await userService.getRepository().find();
 
   return res.json(userView.renderUsers(users));
 }
@@ -21,89 +23,63 @@ async function getUsersWithAccumulatedShiftLength(
   next: NextFunction
 ) {
   // TODO: validate if endDate > startDate
-  const { startDate, endDate } = req.query;
+  const { startDate, endDate } = req.query as {
+    startDate: string;
+    endDate: string;
+  };
 
-  const userRepository = dbConnection.getRepository(User);
-
-  let query = userRepository
-    .createQueryBuilder("user")
-    .leftJoinAndSelect("user.schedules", "schedule")
-    .select([
-      "user.id as 'id'",
-      "user.name as name",
-      "user.email as email",
-      "user.role as role",
-      "SUM(schedule.shiftHours) as totalHours",
-    ])
-    .where("schedule.id is not null")
-    .groupBy("user.id");
-
-  if (startDate)
-    query = query.andWhere("schedule.date >= :startDate", { startDate });
-
-  if (endDate) query = query.andWhere("schedule.date <= :endDate", { endDate });
-
-  const users = await query.getRawMany();
+  const users = await userService.getUsersWithAccumulatedShiftLength({
+    startDate,
+    endDate,
+  });
 
   return res.json(users);
 }
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
-  const { name, email, password } = req.body;
+  // TODO: create a params validator
+  const { body } = req;
 
-  if (!name || !email || !password) throw new BadRequestError("Missing params");
+  if (!body.name || !body.email || !body.password)
+    throw new BadRequestError("Missing params");
 
-  const userRepository = dbConnection.getRepository(User);
-  const userExists = await userRepository.findOne({ where: { email } });
+  const userToCreate = body as User;
 
-  if (userExists)
-    return res.status(409).json({ message: "Email is alreay taken" });
+  const userExists = await userService
+    .getRepository()
+    .findOne({ where: { email: userToCreate.email } });
 
-  const user = userRepository.create({ name, email, password });
-  const userCreated = await userRepository.save(user).catch((_err) => null);
+  if (userExists) throw new ConflictError("Email is alreay taken");
 
-  if (!userCreated)
-    return res.status(422).json({ message: "Error creating user" });
+  const user = await userService.createUser(userToCreate);
 
-  return res.json(userView.renderUser(userCreated));
+  return res.json(userView.renderUser(user));
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction) {
-  const userRepository = dbConnection.getRepository(User);
   const id = parseInt(req.params.id);
 
-  const user = await userRepository.findOneBy({ id });
+  const user = await userService.getRepository().findOneBy({ id });
 
   if (!user) throw new NotFoundError("User not found");
 
   // TODO: create a parms validator for body, so it can modify just some data
-  const userToUpdate = { ...user, ...(req.body as User) };
+  const userToUpdate = { ...user, ...req.body } as User;
 
-  const userSaved = await userRepository
-    .save(userToUpdate)
-    .catch((_err) => null);
-
-  if (!userSaved)
-    return res.status(422).json({ message: "Error updating user" });
+  const userSaved = await userService.updateUser(userToUpdate);
 
   return res.status(200).json(userView.renderUser(userSaved));
 }
 
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
-  const userRepository = dbConnection.getRepository(User);
   const id = parseInt(req.params.id);
 
-  const user = await userRepository.findOneBy({ id });
+  const user = await userService.getRepository().findOneBy({ id });
 
   if (!user) throw new NotFoundError("User not found");
 
   // TODO: check if id soft delete the schedules cascade
-  const userDeleted = await userRepository
-    .softRemove(user)
-    .catch((error) => console.log(error));
-
-  if (!userDeleted)
-    return res.status(422).json({ message: "Error updating user" });
+  const userDeleted = await userService.softDeleteUser(user);
 
   return res.status(200).json(userView.renderUser(userDeleted));
 }

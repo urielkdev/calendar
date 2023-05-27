@@ -44,7 +44,6 @@ export function staffAuthMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log("adsakpdoaspod");
   const data = auth(req.headers, "staff");
 
   req.userToken = data;
