@@ -9,12 +9,12 @@ import { DeepPartial } from "typeorm";
 import { Response } from "supertest";
 
 function buildToken(role: string, id?: number) {
-  const adminUser = userService.getRepository().create({
+  const adminUser = {
     id: id || faker.number.int(),
     name: faker.person.fullName(),
     email: faker.internet.email(),
     role,
-  });
+  } as User;
 
   return authService.generateJwt(adminUser);
 }

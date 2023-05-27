@@ -48,10 +48,6 @@ The project is made with:
 
 ## How to use
 
-TODO: pre-requisites
-
-n. Add variables on `.env` file:
-
 File: `.env`
 
 ```text
@@ -67,33 +63,53 @@ JWT_EXPIRES_IN=set how long the token should be valid
 TZ=UTC  (timezone, keep it as "UTC" fow now so the server doesn't break database date conversions)
 ```
 
-n. Configure `src/database/db-connection.json` to connect the database. Default values as below:
+- Configure `src/database/db-connection.json` to connect the database. Default values as below:
 
-n. Run:
-
-development:
-
-```sh
-  # Install dependencies.
-  $ yarn install
-
-  # After create the database, run the migrations using TypeORM
-  $ yarn db-migrate
-
-  # Start the API
-  $ yarn dev
-```
-
-production:
-
-- Create an .env file as shown above.
-- Install docker and docker-compose.
+- Docker Compose:
+  - Prerequisites
+    - Copy `prod.example.env` file, rename to `.env` and fill the variables
+    - Docker and docker-compose
+  - Run:
 
 ```sh
   # Run docker-compose up.
   $ docker-compose up
 ```
 
+- Without Docker:
+  - Prerequisites
+    - Copy `dev.example.env` file, rename to `.env` and fill the variables
+    - nodejs
+    - npm or yarn
+    - MYSQL and create a database called "calendar_dev" (can be created with `docker-compose up -d db`)
+  - Run:
+
+```sh
+  # Install dependencies.
+  $ yarn install
+
+  # Start the API
+  $ yarn dev
+```
+
+- Test
+  - Prerequisites
+    - Copy `dev.example.env` file, rename to `.env` and fill the variables
+    - nodejs
+    - npm or yarn
+    - MYSQL and create a database called "calendar_test" (can be created with `docker-compose up -d db`)
+  - Run:
+
+```sh
+  # Install dependencies.
+  $ yarn install
+
+  # Start the API
+  $ yarn test
+```
+
 <a id="postman-file"></a>
 
 ## Postman File
+
+- [Collection v2.1 in root directory](https://github.com/urielkdev/calendar/blob/main/Calendar.postman_collection.json) `Calendar.postman_collection.json`

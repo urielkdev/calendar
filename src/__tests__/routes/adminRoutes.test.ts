@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import scheduleService from "../../app/services/scheduleService";
 import userService from "../../app/services/userService";
 import dbConnection from "../../database/dbConnection";
