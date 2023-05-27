@@ -5,6 +5,7 @@ import dbConnection from "../../database/db-connection";
 import Schedule from "../entities/ScheduleEntity";
 import ScheduleView from "../views/ScheduleView";
 import User from "../entities/UserEntity";
+import { BadRequestError, NotFoundError } from "../../utils/errors";
 
 async function getMySchedule(req: Request, res: Response, next: NextFunction) {
   req.params.userId = `${req.userToken.id}`;
@@ -26,7 +27,7 @@ async function getUserSchedules(
 
   const user = await userRepository.findOneBy({ id: userId });
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) throw new NotFoundError("User not found");
 
   let query = scheduleRepository
     .createQueryBuilder("schedule")
@@ -46,14 +47,14 @@ async function createSchedule(req: Request, res: Response, next: NextFunction) {
   const { date, shiftHours } = req.body;
 
   if (!userId || !date || !shiftHours)
-    return res.status(400).json({ message: "Missing params" });
+    throw new BadRequestError("Missing params");
 
   const userRepository = dbConnection.getRepository(User);
   const scheduleRepository = dbConnection.getRepository(Schedule);
 
   const user = await userRepository.findOneBy({ id: userId });
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) throw new NotFoundError("User not found");
   // TODO: check if needs to check the conflict dates for insert
   // maybe instead shiftHours, use a endDate
 
@@ -73,7 +74,7 @@ async function updateSchedule(req: Request, res: Response, next: NextFunction) {
   const id = parseInt(req.params.id);
 
   const schedule = await scheduleRepository.findOneBy({ id });
-  if (!schedule) return res.status(404).json({ message: "Schedule not found" });
+  if (!schedule) throw new NotFoundError("Schedule not found");
 
   // TODO: create a parms validator for body, so it can modify just some data
   const scheduleToUpdate = { ...schedule, ...(req.body as Schedule) };
@@ -93,7 +94,7 @@ async function deleteSchedule(req: Request, res: Response, next: NextFunction) {
   const id = parseInt(req.params.id);
 
   const schedule = await scheduleRepository.findOneBy({ id });
-  if (!schedule) return res.status(404).json({ message: "Schedule not found" });
+  if (!schedule) throw new NotFoundError("Schedule not found");
 
   // TODO: check if id soft delete the schedules cascade
   const scheduleDeleted = await scheduleRepository

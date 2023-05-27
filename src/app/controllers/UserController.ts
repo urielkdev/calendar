@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import dbConnection from "../../database/db-connection";
 import User from "../entities/UserEntity";
 import UserView from "../views/UserView";
+import { BadRequestError, NotFoundError } from "../../utils/errors";
 
 // TODO: create pagination
 async function getUsers(req: Request, res: Response, next: NextFunction) {
@@ -49,8 +50,7 @@ async function getUsersWithAccumulatedShiftLength(
 async function createUser(req: Request, res: Response, next: NextFunction) {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password)
-    return res.status(400).json({ message: "Missing params" });
+  if (!name || !email || !password) throw new BadRequestError("Missing params");
 
   const userRepository = dbConnection.getRepository(User);
   const userExists = await userRepository.findOne({ where: { email } });
@@ -73,7 +73,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
 
   const user = await userRepository.findOneBy({ id });
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) throw new NotFoundError("User not found");
 
   // TODO: create a parms validator for body, so it can modify just some data
   const userToUpdate = { ...user, ...(req.body as User) };
@@ -94,7 +94,7 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
 
   const user = await userRepository.findOneBy({ id });
 
-  if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) throw new NotFoundError("User not found");
 
   // TODO: check if id soft delete the schedules cascade
   const userDeleted = await userRepository

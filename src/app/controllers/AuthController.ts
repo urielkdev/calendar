@@ -2,23 +2,22 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import userRepository from "../repositories/UserRepository";
+import userService from "../services/UserService";
 import userView from "../views/UserView";
+import { BadRequestError, UnauthorizedError } from "../../utils/errors";
 
 async function authenticate(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({ message: "Missing params" });
+  if (!email || !password) throw new BadRequestError("Missing params");
 
-  const user = await userRepository.getUserByEmail(email);
+  const user = await userService.getUserByEmail(email);
 
-  if (!user) return res.status(401).json({ message: "Unable to login" });
+  if (!user) throw new UnauthorizedError("Unable to login");
 
   const validPassword = await bcrypt.compare(password, user.password);
 
-  if (!validPassword)
-    return res.status(401).json({ message: "Unable to login" });
+  if (!validPassword) throw new UnauthorizedError("Unable to login");
 
   const token = jwt.sign(
     {

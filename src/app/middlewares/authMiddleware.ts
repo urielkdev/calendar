@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { UnauthorizedError } from "../../utils/errors";
 
 type TokenPayload = {
   id: number;
@@ -13,14 +14,15 @@ type TokenPayload = {
 function auth(headers: any, role: string) {
   const { authorization } = headers;
 
-  if (!authorization) throw new Error("Unauthorized");
+  if (!authorization) throw new UnauthorizedError();
+
   const token = authorization.replace("Bearer", "").trim();
   const data = jwt.verify(
     token,
     process.env.JWT_SECRET as string
   ) as TokenPayload;
 
-  if (data.role !== role) throw new Error("Unauthorized");
+  if (data.role !== role) throw new UnauthorizedError();
 
   return data;
 }
@@ -30,14 +32,10 @@ export function adminAuthMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const data = auth(req.headers, "admin");
+  const data = auth(req.headers, "admin");
 
-    req.userToken = data;
-    next();
-  } catch {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  req.userToken = data;
+  next();
 }
 
 export function staffAuthMiddleware(
@@ -45,12 +43,9 @@ export function staffAuthMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const data = auth(req.headers, "staff");
+  console.log("adsakpdoaspod");
+  const data = auth(req.headers, "staff");
 
-    req.userToken = data;
-    next();
-  } catch {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  req.userToken = data;
+  next();
 }

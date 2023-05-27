@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import dbConnection from "../../database/db-connection";
 
 import User from "../entities/UserEntity";
@@ -25,6 +24,13 @@ async function getUsers() {
 
   return await userRepository.find();
 }
+
+// async function updateUser(id: number, params) {
+//   const userRepository = dbConnection.getRepository(User);
+//   const user = await userRepository.findOneByOrFail({ id });
+//   mergear user com params
+//   return await userRepository.save(user);
+// }
 
 export default {
   create,

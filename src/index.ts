@@ -1,11 +1,13 @@
-import express from "express";
+import "express-async-errors";
 import "reflect-metadata";
+import express, { NextFunction, Request, Response } from "express";
 
 import dotenv from "dotenv";
 dotenv.config();
 
 import dbConnection from "./database/db-connection";
 import routes from "./routes/routes";
+import errorMiddleware from "./app/middlewares/errorMiddleware";
 
 dbConnection
   .initialize()
@@ -17,6 +19,8 @@ dbConnection
 
     app.use(express.json());
     app.use(routes);
+
+    app.use(errorMiddleware);
 
     app.listen(port, () => console.log(`Server started on port ${port}`));
   })
