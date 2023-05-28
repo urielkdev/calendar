@@ -15,7 +15,7 @@ beforeAll(async () => {
 });
 
 describe("adminAuthMiddleware/3", () => {
-  it.only("should authorize a valid token with admin role", () => {
+  it("should authorize a valid token with admin role", () => {
     const req = {
       headers: { authorization: `Bearer ${adminToken}` },
     } as Request;

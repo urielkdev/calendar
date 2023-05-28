@@ -4,6 +4,7 @@ import Schedule from "../entities/ScheduleEntity";
 import { UnprocessableEntityError } from "../../utils/Errors";
 
 import { dbConnection } from "../../database/dbConnection";
+import { DeepPartial } from "typeorm";
 
 function getRepository() {
   return dbConnection.getRepository(Schedule);
@@ -41,7 +42,7 @@ async function createSchedule(user: User, date: string, shiftHours: number) {
   return scheduleCreated;
 }
 
-async function updateSchedule(schedule: Schedule) {
+async function updateSchedule(schedule: DeepPartial<Schedule>) {
   const scheduleRepository = dbConnection.getRepository(Schedule);
 
   const scheduleSaved = await scheduleRepository

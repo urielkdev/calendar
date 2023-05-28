@@ -10,7 +10,7 @@ export default class UserSeeder implements Seeder {
     const userToCreate = {
       name: "Adam",
       email: "admin@admin.com",
-      password: "123",
+      password: "123456",
       role: "admin",
     };
 

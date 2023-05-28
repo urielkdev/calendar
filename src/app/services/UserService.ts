@@ -4,6 +4,7 @@ import { UnprocessableEntityError } from "../../utils/Errors";
 
 import { dbConnection } from "../../database/dbConnection";
 import scheduleService from "./scheduleService";
+import { DeepPartial } from "typeorm";
 
 function getRepository() {
   return dbConnection.getRepository(User);
@@ -39,7 +40,7 @@ async function getUsersWithAccumulatedShiftLength({
   return await query.getRawMany();
 }
 
-async function createUser(user: User): Promise<User> {
+async function createUser(user: DeepPartial<User>): Promise<User> {
   const userRepository = dbConnection.getRepository(User);
 
   const userToCreate = userRepository.create(user);
@@ -52,7 +53,10 @@ async function createUser(user: User): Promise<User> {
   return userCreated;
 }
 
-async function updateUser(user: User, changes: Object): Promise<User> {
+async function updateUser(
+  user: User,
+  changes: DeepPartial<User>
+): Promise<User> {
   const userRepository = dbConnection.getRepository(User);
 
   const userRecreated = userRepository.create({ ...user, ...changes });
