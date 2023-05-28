@@ -4,7 +4,7 @@ import { BadRequestError, UnauthorizedError } from "../../utils/Errors";
 
 import authService from "../services/authService";
 import userService from "../services/userService";
-import userView from "../views/userView";
+import userView from "../views/UserView";
 import { z } from "zod";
 
 const loginSchema = z.object({
