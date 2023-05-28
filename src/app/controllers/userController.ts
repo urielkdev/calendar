@@ -7,7 +7,7 @@ import {
 } from "../../utils/Errors";
 import User from "../entities/UserEntity";
 
-import userView from "../views/UserView";
+import userView from "../views/userView";
 import userService from "../services/userService";
 import utils from "../../utils/utils";
 import { z } from "zod";
